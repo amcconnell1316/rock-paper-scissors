@@ -1,3 +1,28 @@
+const score = {
+    playerScore: 0,
+    computerScore: 0,
+    ties: 0,
+    get numGames() { return (this.playerScore + this.computerScore + this.ties); },
+    playerWins: function(){
+        this.playerScore++;
+        updateScoreDisplay();
+    },
+    computerWins: function(){
+        this.computerScore++;
+        updateScoreDisplay();
+    },
+    tieGame: function(){
+        this.ties++;
+        updateScoreDisplay();
+    },
+    resetGame: function(){
+        this.playerScore = 0;
+        this.computerScore = 0;
+        this.ties = 0;
+        updateScoreDisplay();
+    }
+}
+
 //Get computer choice
 function getComputerChoice(){
     let selectionNumber = Math.floor(Math.random() * 3);
@@ -69,7 +94,20 @@ function checkWinner(player1Choice, player2Choice) {
 
 //Play round
 function playRound(playerSelection, computerSelection){
-    let winner = checkWinner(playerSelection, computerSelection);
+    const winner = checkWinner(playerSelection, computerSelection); 
+    switch(winner){
+        case 0:
+            score.tieGame();
+            break;
+        case 1:
+            score.playerWins();
+            break;
+        case 2:
+            score.computerWins();
+            break;
+    }
+
+    console.log("Round " + score.numGames + ": " + getResultsMessage(winner, playerSelection, computerSelection));
     return winner;
 }
 
@@ -78,42 +116,36 @@ function getResultsMessage(winner, playerSelection, computerSelection)
     let message;
     switch(winner){
         case 0:
-            message= `Players tie! ${playerSelection} = ${computerSelection}`;
+            message= `Players tie! ${playerSelection} = ${computerSelection}`;          
             break;
         case 1:
-            message = `You win! ${playerSelection} beats ${computerSelection}!`;
+            message = `You win! ${playerSelection} beats ${computerSelection}!`;         
             break;
         case 2:
-            message = `You lose :( ${computerSelection} beats ${playerSelection})`
+            message = `You lose :( ${computerSelection} beats ${playerSelection})`;           
             break;
     }
 
     return message;
 }
 
+function updateScoreDisplay(){
+    console.log(`Final tally: Player wins: ${score.playerScore}  Computer wins: ${score.computerScore}  Ties: ${score.ties}`);
+}
+
 function game(){
     let playerSelection, computerSelection, winner
-    let playerWins = 0;
-    let computerWins = 0;
-    let ties = 0;
-    for (let i=1; i<=5; i++){
+    let keepPlaying=true;
+    do{
         playerSelection = prompt("Choose Rock, Paper or Scissors: ")
-        computerSelection = getComputerChoice();
-        winner = playRound(playerSelection, computerSelection);
-        switch(winner){
-            case 0:
-                ties++;
-                break;
-            case 1:
-                playerWins++;
-                break;
-            case 2:
-                computerWins++;
-                break;
+        if (playerSelection === "done") {
+            keepPlaying=false;
+            break;
         }
-        console.log("Round " + i + ": " + getResultsMessage(winner, playerSelection, computerSelection));
-    }
-    console.log(`Final tally: Player wins: ${playerWins}  Computer wins: ${computerWins}  Ties: ${ties}`);
+        computerSelection = getComputerChoice();
+        winner = playRound(playerSelection, computerSelection); 
+    } while (keepPlaying)
+    
 }
 
 //Main code
