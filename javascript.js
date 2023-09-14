@@ -93,7 +93,8 @@ function checkWinner(player1Choice, player2Choice) {
 
 
 //Play round
-function playRound(playerSelection, computerSelection){
+function playRound(playerSelection){
+    computerSelection = getComputerChoice();
     const winner = checkWinner(playerSelection, computerSelection); 
     switch(winner){
         case 0:
@@ -133,21 +134,18 @@ function updateScoreDisplay(){
     console.log(`Final tally: Player wins: ${score.playerScore}  Computer wins: ${score.computerScore}  Ties: ${score.ties}`);
 }
 
-function game(){
-    let playerSelection, computerSelection, winner
-    let keepPlaying=true;
-    do{
-        playerSelection = prompt("Choose Rock, Paper or Scissors: ")
-        if (playerSelection === "done") {
-            keepPlaying=false;
-            break;
-        }
-        computerSelection = getComputerChoice();
-        winner = playRound(playerSelection, computerSelection); 
-    } while (keepPlaying)
-    
-}
-
 //Main code
 console.log("Welcome to Rock Paper Scissors!");
-game();
+const rockBtn = document.getElementById("rock");
+const paperBtn = document.getElementById("paper");
+const scissorsBtn = document.getElementById("scissors");
+
+rockBtn.addEventListener('click', () => {
+    playRound("rock");
+});
+paperBtn.addEventListener('click', () => {
+    playRound("paper");
+});
+scissorsBtn.addEventListener('click', () => {
+    playRound("scissors");
+});
