@@ -108,7 +108,8 @@ function playRound(playerSelection){
             break;
     }
 
-    console.log("Round " + score.numGames + ": " + getResultsMessage(winner, playerSelection, computerSelection));
+    roundLogPara.textContent += "Round " + score.numGames + ": " + getResultsMessage(winner, playerSelection, computerSelection) + "\r\n";
+    checkForGameWinner();
     return winner;
 }
 
@@ -131,21 +132,38 @@ function getResultsMessage(winner, playerSelection, computerSelection)
 }
 
 function updateScoreDisplay(){
-    console.log(`Final tally: Player wins: ${score.playerScore}  Computer wins: ${score.computerScore}  Ties: ${score.ties}`);
+    scorePara.textContent = `Player score: ${score.playerScore}  Computer score: ${score.computerScore}  Ties: ${score.ties}`;
+}
+
+function checkForGameWinner(){
+    let gameOver = false;
+    if(score.playerScore >= 5){
+        winnerPara.textContent = "You Win!"
+        gameOver = true;
+    } else if(score.computerScore >= 5) {
+        winnerPara.textContent = "You Lose!"
+        gameOver = true;
+    }
+
+    if (gameOver){
+        rockBtn.removeEventListener('click', handleButtonClick);
+        paperBtn.removeEventListener('click', handleButtonClick);
+        scissorsBtn.removeEventListener('click', handleButtonClick);
+    }
+}
+
+function handleButtonClick(e){
+    playRound(e.currentTarget.id);
 }
 
 //Main code
-console.log("Welcome to Rock Paper Scissors!");
 const rockBtn = document.getElementById("rock");
 const paperBtn = document.getElementById("paper");
 const scissorsBtn = document.getElementById("scissors");
+const scorePara = document.getElementById("scorePara");
+const roundLogPara = document.getElementById("roundLogPara");
+const winnerPara = document.getElementById("winnerPara");
 
-rockBtn.addEventListener('click', () => {
-    playRound("rock");
-});
-paperBtn.addEventListener('click', () => {
-    playRound("paper");
-});
-scissorsBtn.addEventListener('click', () => {
-    playRound("scissors");
-});
+rockBtn.addEventListener('click', handleButtonClick);
+paperBtn.addEventListener('click', handleButtonClick);
+scissorsBtn.addEventListener('click', handleButtonClick);
